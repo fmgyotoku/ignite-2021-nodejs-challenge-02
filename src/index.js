@@ -10,20 +10,62 @@ app.use(cors());
 const users = [];
 
 function checksExistsUserAccount(request, response, next) {
-  // Complete aqui
+  const { username } = request.headers
+
+  const user = users.find((user) => user.username === username)
+
+  request.user = user
+
+  return next()
 }
 
 function checksCreateTodosUserAvailability(request, response, next) {
-  // Complete aqui
+  const { user } = request
+
+  if (!user.pro && user.todos.length >= 10) {
+    return response.status(403).json({ error: 'User not in pro plan and reached the free plan todo limit' })
+  }
+
+  return next()
 }
 
 function checksTodoExists(request, response, next) {
-  // Complete aqui
+  const { username } = request.headers
+  const { id } = request.params
+
+  const user = users.find((user) => user.username === username)
+
+  if (!user) {
+    return response.status(404).json({ error: 'User not found' })
+  }
+  else {
+    const todo = user.todos.find((todo) => todo.id === id)
+
+    if (!todo) {
+      return response.status(404).json({ error: 'To do not found' })
+    }
+
+    request.todo = todo
+  }
+
+  return next()
 }
 
 function findUserById(request, response, next) {
-  // Complete aqui
+  const { id } = request.params
+
+  const user = users.find((user) => user.id === id)
+
+  request.user = user
+
+  return next()
 }
+
+app.get('/users/:id', findUserById, (request, response) => {
+  const { user } = request;
+
+  return response.json(user);
+});
 
 app.post('/users', (request, response) => {
   const { name, username } = request.body;
@@ -45,12 +87,6 @@ app.post('/users', (request, response) => {
   users.push(user);
 
   return response.status(201).json(user);
-});
-
-app.get('/users/:id', findUserById, (request, response) => {
-  const { user } = request;
-
-  return response.json(user);
 });
 
 app.patch('/users/:id/pro', findUserById, (request, response) => {

@@ -10,11 +10,11 @@
 
 ## 💻 Projeto
 
-ignite-template-trabalhando-com-middlewares
+ignite-nodejs-foundations-challenge-02
 
 ## 📝 Licença
 
-Esse projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
+This project is under MIT license. For further details, please refer to [LICENSE](LICENSE)
 
 ---
 
